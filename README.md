@@ -1,15 +1,15 @@
-# Roleta das Anas — O Grimório das Recompensas
+# Roleta das Anas — O Oráculo dos Encantos
 
-Um presente de Carol para Ana Flávia. “Cada pequena conquista merece um pouquinho de magia.”
+Um presente de Carol para Ana Flávia. “Minha gatinha, o destino preparou um carinho especial para você.”
 
-Aplicação em português, mobile-first, com React, TypeScript, Vite, Lucide React, SVG, CSS e Web Audio API. Não há administração, autenticação, backend, banco externo ou credenciais.
+Aplicação em português, mobile-first, com React, TypeScript, Vite, Lucide React, Motion, SVG, CSS e Web Audio API. Sem administração, autenticação, backend, banco externo ou credenciais.
 
 ## Rodar localmente
 
 Requer Node.js 22.12 ou superior e npm.
 
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
@@ -21,43 +21,68 @@ npm run build
 npm run preview
 ```
 
-## Experiência
+## A experiência
 
-- **Meu Cantinho:** carta de Carol, sussurros carinhosos e campo de código.
-- **Roleta Mágica:** validação antes do giro, nove prêmios com probabilidade igual, animação de seis segundos e revelação. Os dados são gravados antes da animação; rodadas interrompidas recuperam o resultado original.
-- **Baú dos Encantos:** descrição, mensagem, data, histórico e filtros. Ana pode marcar cada mimo como recebido.
-- **Configurações:** áudio opcional inicialmente desligado, redução de movimento e backups JSON. A preferência do sistema por movimento reduzido sempre é respeitada.
+- **Meu Cantinho:** carta de Carol, sussurros e código de resgate. Não existe catálogo de prêmios nem prévia dos mimos.
+- **Oráculo dos Encantos:** quatro cartas com o verso original nos cantos de um palco responsivo e roleta central com quatro setores: Sol/Carol, Lua/Ana Flávia, Força/Lana e Justiça/Bonnie.
+- **Revelação:** o código válido inicia a rodada. Carta, prêmio e mensagem são escolhidos e persistidos antes do giro. A carta vencedora brilha, se move ao centro, vira em 3D e ocupa uma apresentação ampla com mensagem e mimo. A animação usa eventos de transição e Motion; temporizadores de contingência só recuperam eventos visuais suspensos.
+- **Baú dos Encantos:** descrição, mensagem, data, status, miniatura da carta e histórico. Ana marca mimos recebidos e pode rever cartas em tamanho grande sem novo sorteio.
+- **Configurações:** áudio opcional inicialmente desligado, redução de movimento e backups JSON. O movimento reduzido do sistema sempre é respeitado.
+
+## Surpresa e prêmios sem repetição
+
+Os nove mimos originais permanecem no código, sem aparecer na interface antes da revelação. Cada prêmio pode ser conquistado **uma única vez no histórico local**, independentemente de estar aguardando ou recebido.
+
+O sorteio da carta é independente do prêmio: cada carta tem 25% de chance e pode revelar qualquer mimo ainda elegível. As cartas podem reaparecer; os prêmios não. Os prêmios disponíveis têm inicialmente pesos iguais. A estrutura preserva ativação, pesos e limites no código-fonte.
+
+Após conquistar os nove mimos, o oráculo bloqueia novas rodadas e informa que a coleção foi completada. Nenhum novo código é consumido, não há reinício automático e não existe botão para apagar histórico ou liberar repetições.
+
+Históricos anteriores e backups com repetições já existentes são preservados. Qualquer prêmio presente no histórico fica excluído de todos os próximos sorteios. Não são inventadas cartas para as conquistas antigas.
+
+## As artes originais
+
+As cinco ilustrações fornecidas por Carol estão em:
+
+- `public/tarot/the-sun.png`
+- `public/tarot/the-moon.png`
+- `public/tarot/strength.png`
+- `public/tarot/justice.png`
+- `public/tarot/card-back.png`
+
+Foram copiadas sem edição ou recorte. A aplicação preserva proporções e usa `object-fit: contain`. O verso é igual para as quatro cartas; a frente aparece somente após a seleção/virada. Imagens são preparadas para uso offline. Detalhes em `public/tarot/README.md`.
+
+## Códigos, dados e migração
+
+Os mesmos 100 códigos fixos estão em `src/data/redemptionCodes.ts`: 25 ANA, 25 CAROL, 25 LANA e 25 BONNIE. A lista numerada para Carol está em `CODIGOS-RESGATE.md`. Nenhum código foi modificado nesta atualização. Carol escolhe e informa os códigos manualmente.
+
+**Os códigos são públicos, não são segredos.** Qualquer pessoa pode ler o repositório ou o JavaScript distribuído. O bloqueio vale apenas para o mesmo armazenamento. Limpar o armazenamento permite reutilização. Aparelhos, navegadores e perfis não compartilham dados.
+
+O estado único segue na chave localStorage `roleta-das-anas:v1`, para manter os dados instalados. O esquema interno agora é **versão 2** e inclui o snapshot da carta. A leitura migra a versão 1 em memória, mantendo integralmente códigos, prêmios, mensagens, datas e status. Conquistas antigas usam `cardSnapshot: null`. A próxima gravação persiste a versão 2. Versões desconhecidas são recusadas.
+
+Sorteios usam `crypto.getRandomValues`. Web Locks serializa leitura e gravação entre abas da mesma origem. Sem essa API, gravações são bloqueadas com orientação para atualizar o navegador. Use HTTPS em produção ou localhost em desenvolvimento. O resultado visual não é fonte de dados; uma recarga recupera o resultado salvo.
+
+Prêmios: `src/data/rewards.ts`. Cartas e mensagens especiais: `src/data/tarot.ts`. Mensagens anteriores e sussurros: `src/data/messages.ts`. Alterações futuras são feitas no código-fonte e publicadas por novo deploy. Preserve IDs antigos para manter compatibilidade dos backups.
+
+## Backups
+
+Abra configurações e clique **Exportar backup JSON** antes de trocar de aparelho ou limpar o site. Na nova instalação, selecione o arquivo, revise a prévia e clique **Importar e mesclar memórias**.
+
+Aceita backups v1 e v2, validando formato, datas, códigos, duplicidades, prêmios e cartas. A mescla preserva códigos consumidos, o resultado local nos conflitos e os status recebidos. Backups antigos não revertem entregas. As preferências vêm do arquivo. Não existe substituição destrutiva.
+
+Dados inválidos não são importados; armazenamento corrompido nunca é sobrescrito silenciosamente. Os prêmios importados também são excluídos dos próximos sorteios.
 
 ## GitHub e Vercel
 
-Envie estes arquivos ao repositório `CarolGonzaga/Roleta-das-Anas`, branch `main`. Na Vercel, importe esse repositório, selecione **Vite**, comando de build `npm run build`, diretório de saída `dist` e instale com `npm ci`. Nenhuma variável de ambiente é necessária. O `vercel.json` inclui fallback de rotas para a SPA. A navegação interna funciona sem bibliotecas de roteamento.
+Repositório: `CarolGonzaga/Roleta-das-Anas`, branch `main`. Importe na Vercel como **Vite**, instale com `npm ci`, use build `npm run build` e saída `dist`. Nenhuma variável de ambiente é necessária.
 
-O projeto está preparado para deploy; criar o projeto da Vercel e conectar o GitHub exige acesso à conta Vercel. A publicação não é feita apenas por ter o código local.
-
-## Códigos e prêmios
-
-Os 100 códigos fixos estão em `src/data/redemptionCodes.ts`: 25 ANA, 25 CAROL, 25 LANA e 25 BONNIE. A lista numerada de consulta para Carol está em `CODIGOS-RESGATE.md`. Carol escolhe um deles e entrega manualmente à Ana. Não há geração nem edição pela interface.
-
-**Os códigos são públicos, não são segredos.** Qualquer pessoa pode ler o repositório ou o JavaScript distribuído. O bloqueio de reutilização vale apenas para o mesmo armazenamento local. Limpar esse armazenamento permite reutilização. Navegadores, perfis e aparelhos diferentes não compartilham os dados.
-
-Os nove prêmios e descrições estão em `src/data/rewards.ts`. Alterações futuras são feitas no código-fonte, seguidas de novo deploy. A estrutura suporta pesos positivos, ativação e limites de concessão. Históricos usam snapshots, preservando nome, descrição e mensagem originais. Nunca remova IDs antigos: eles também validam os backups. As mensagens ficam em `src/data/messages.ts`.
-
-## Armazenamento e backups
-
-Um estado versionado único é salvo no `localStorage` na chave `roleta-das-anas:v1`, com códigos consumidos, rodadas/recompensas e preferências. Sorteios usam `crypto.getRandomValues`; o registro identificável usa `crypto.randomUUID`. Prêmio, mensagem e código são persistidos juntos antes do giro. Falhas de gravação impedem a animação e não consomem o código.
-
-Transações usam **Web Locks** para coordenar abas da mesma origem. Sem suporte a essa API, operações de gravação são bloqueadas com uma mensagem orientando a atualização do navegador. Use HTTPS em produção ou localhost em desenvolvimento. Não há garantia global entre dispositivos e o armazenamento pode ser editado manualmente pelo usuário.
-
-Abra o botão de configurações no cabeçalho e clique **Exportar backup JSON**. Faça isso antes de limpar dados ou trocar de aparelho. No novo navegador, selecione o JSON, confira a prévia e clique **Importar e mesclar memórias**. Importações validam esquema, datas, códigos, duplicidades e snapshots. A mescla preserva códigos consumidos, o resultado local em conflitos e status recebido; backups antigos não revertem entregas. As preferências são recuperadas do arquivo importado. Não há substituição destrutiva de dados.
-
-Arquivos inválidos não são importados e estados corrompidos não são sobrescritos automaticamente. Versões futuras do esquema devem acrescentar migrações explícitas antes de modificar a chave/versão; a versão inicial é 1 e versões desconhecidas são recusadas.
+O `vercel.json` preserva os arquivos estáticos, inclusive tarô, e inclui fallback SPA. A configuração está pronta; criar/conectar o projeto Vercel depende da conta Vercel.
 
 ## Acessibilidade e instalação
 
-Foco visível, controles nativos, diálogos com foco contido e Escape, feedback anunciado, fontes legíveis, navegação por teclado, alvos grandes e respeito a `prefers-reduced-motion`. Ícones funcionais exclusivamente Lucide; decoração vetorial em CSS/SVG. Fontes Google Fonts têm fallback local.
+Foco visível, link para pular navegação, botões grandes, controles nativos, feedback anunciado, alternativas textuais das cartas e navegação por teclado. Com movimento reduzido, a revelação usa opacidade e dispensa deslocamento/virada 3D.
 
-Manifest e service worker permitem instalação nos navegadores compatíveis e funcionamento offline após a primeira visita completa. HTML consulta a rede primeiro; assets Vite com nomes versionados usam cache. O histórico não depende do service worker. O navegador define se e como exibe a instalação.
+Manifest e service worker permitem instalação em navegadores compatíveis e funcionamento offline após completar o primeiro cache. O cache inclui artes e assets; sua versão deriva do HTML, do worker e dos bytes das cinco imagens. HTML usa rede primeiro e caches antigos do aplicativo são removidos na ativação. O histórico sempre fica no localStorage. Fontes Google têm fallback local.
 
-## Verificações
+## Verificação
 
-Os testes Vitest verificam códigos, consumo consistente, recuperação, sorteio e pesos, disponibilidade, alinhamento da roleta, persistência e mescla de backups. Consulte `VALIDACAO.md` para os comandos e cenários realmente executados nesta implementação.
+`src/tests/game.test.ts` cobre códigos, consumo, sorteio ponderado, quatro cartas, ausência de repetição, esgotamento, recuperação, ângulos, histórico e backups/migração. Consulte `VALIDACAO.md` para verificações realmente executadas.

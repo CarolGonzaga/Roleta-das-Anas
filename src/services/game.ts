@@ -1,22 +1,26 @@
 import { redemptionCodes } from '../data/redemptionCodes';
 import { rewards } from '../data/rewards';
-import { messages } from '../data/messages';
-import type { AppState, Reward, Spin } from '../types';
+import { cardMessages, tarotCards } from '../data/tarot';
+import type { AppState, Reward, Spin, TarotCard } from '../types';
 
 export const STORAGE_KEY = 'roleta-das-anas:v1';
 export const normalizeCode = (code: string) => code.trim().toUpperCase();
 const knownCodes: ReadonlySet<string> = new Set(redemptionCodes);
-export function initialState(): AppState { return {version:1,spins:[],usedCodes:[],settings:{audioEnabled:false,reducedMotion:false}}; }
+export const EXHAUSTED_MESSAGE = 'Todos os encantos desta coleção já encontraram você, gatinha. Seu baú guarda cada carinho. Nenhum código foi consumido.';
+export function initialState(): AppState { return {version:2,spins:[],usedCodes:[],settings:{audioEnabled:false,reducedMotion:false}}; }
 export function validateCode(code: string, state: AppState): string {
  const normalized = normalizeCode(code);
  if (!knownCodes.has(normalized)) throw new Error('Hmm... esse feitiço não está no nosso grimório, gatinha. Confere o código com a Carol?');
  if (state.usedCodes.includes(normalized)) throw new Error('Esse encanto já foi usado, meu amor! Peça outro código à Carol.');
+ if (!eligibleRewards(state).length) throw new Error(EXHAUSTED_MESSAGE);
  return normalized;
 }
 export function randomUnit(): number { return crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296; }
 export function eligibleRewards(state: AppState, pool: Reward[] = rewards): Reward[] {
- return pool.filter(r => r.enabled && r.weight > 0 && Number.isFinite(r.weight) && (r.maxAwards === null || state.spins.filter(s => s.rewardSnapshot.id === r.id).length < r.maxAwards));
+ const earned = new Set(state.spins.map(s => s.rewardSnapshot.id));
+ return pool.filter(r => !earned.has(r.id) && r.enabled && r.weight > 0 && Number.isFinite(r.weight) && (r.maxAwards === null || r.maxAwards > 0));
 }
+export function selectCard(random = randomUnit): TarotCard { return tarotCards[Math.floor(random()*tarotCards.length)]; }
 export function selectReward(pool: Reward[], random = randomUnit): Reward {
  const total = pool.reduce((sum,r) => sum+r.weight,0);
  if (!pool.length || !Number.isFinite(total) || total <= 0) throw new Error('Os encantos estão descansando. Fale com a Carol.');
@@ -27,8 +31,10 @@ export function selectReward(pool: Reward[], random = randomUnit): Reward {
 export function createSpin(state: AppState, rawCode: string, random = randomUnit): AppState {
  const code = validateCode(rawCode,state);
  if(state.spins.some(s => !s.animationCompleted)) throw new Error('Há um encanto esperando para ser revelado.');
+ const card = selectCard(random);
  const reward = selectReward(eligibleRewards(state),random);
- const spin: Spin = {id:crypto.randomUUID(),code,rewardSnapshot:{...reward},message:messages[Math.floor(random()*messages.length)],earnedAt:new Date().toISOString(),animationCompleted:false,status:'waiting',receivedAt:null};
+ const choices = cardMessages[card.id];
+ const spin: Spin = {id:crypto.randomUUID(),code,rewardSnapshot:{...reward},cardSnapshot:{...card},message:choices[Math.floor(random()*choices.length)],earnedAt:new Date().toISOString(),animationCompleted:false,status:'waiting',receivedAt:null};
  return {...state,usedCodes:[...state.usedCodes,code],spins:[...state.spins,spin]};
 }
 export function wheelAngle(index: number, count: number): number { return 360*6 + (360-(index+.5)*360/count); }
@@ -40,8 +46,8 @@ export function parseBackup(raw: string): AppState {
  try { data = JSON.parse(raw); } catch { throw new Error('Não consegui ler esse JSON. Escolha um backup exportado pelo grimório.'); }
  const fail = () => { throw new Error('O backup não tem um formato válido ou pertence a outra versão do grimório.'); };
  if(!data || typeof data !== 'object') return fail();
- const d = data as AppState;
- if(d.version !== 1 || !Array.isArray(d.spins) || !Array.isArray(d.usedCodes) || !d.settings || typeof d.settings.audioEnabled !== 'boolean' || typeof d.settings.reducedMotion !== 'boolean') return fail();
+ const d = data as Omit<AppState,'version'> & {version: number};
+ if(![1,2].includes(d.version) || !Array.isArray(d.spins) || !Array.isArray(d.usedCodes) || !d.settings || typeof d.settings.audioEnabled !== 'boolean' || typeof d.settings.reducedMotion !== 'boolean') return fail();
  if(d.spins.length > 100 || d.usedCodes.length > 100 || new Set(d.usedCodes).size !== d.usedCodes.length || d.usedCodes.some(c => !knownCodes.has(c))) return fail();
  const ids = new Set<string>(), codes = new Set<string>();
  const validDate = (v: unknown) => typeof v === 'string' && Number.isFinite(Date.parse(v));
@@ -52,9 +58,17 @@ export function parseBackup(raw: string): AppState {
   const r = s.rewardSnapshot;
   if(!r || !rewards.some(x => x.id === r.id && x.icon === r.icon) || !validText(r.name) || !validText(r.shortName) || !validText(r.description) || !validText(r.category) || typeof r.enabled !== 'boolean' || !Number.isFinite(r.weight) || r.weight < 0 || !(r.maxAwards === null || (Number.isInteger(r.maxAwards) && r.maxAwards >= 0))) return fail();
   ids.add(s.id); codes.add(s.code);
-  spins.push({id:s.id,code:s.code,rewardSnapshot:{id:r.id,name:r.name,shortName:r.shortName,description:r.description,icon:r.icon,category:r.category,weight:r.weight,enabled:r.enabled,maxAwards:r.maxAwards},message:s.message,earnedAt:s.earnedAt,animationCompleted:s.animationCompleted,status:s.status,receivedAt:s.receivedAt});
+  // Históricos da versão 1 não tinham carta; nunca inventamos uma ao migrar.
+  let cardSnapshot: TarotCard | null = null;
+  if(d.version === 2 && s.cardSnapshot !== null) {
+   const c = s.cardSnapshot;
+   const known = c && tarotCards.find(card => card.id === c.id);
+   if(!known || c.image !== known.image || c.icon !== known.icon || !validText(c.name) || !validText(c.english) || !validText(c.person) || !validText(c.title)) return fail();
+   cardSnapshot = {id:c.id,name:c.name,english:c.english,person:c.person,image:c.image,icon:c.icon,title:c.title};
+  }
+  spins.push({id:s.id,code:s.code,rewardSnapshot:{id:r.id,name:r.name,shortName:r.shortName,description:r.description,icon:r.icon,category:r.category,weight:r.weight,enabled:r.enabled,maxAwards:r.maxAwards},cardSnapshot,message:s.message,earnedAt:s.earnedAt,animationCompleted:s.animationCompleted,status:s.status,receivedAt:s.receivedAt});
  }
- return {version:1,spins,usedCodes:[...d.usedCodes],settings:{audioEnabled:d.settings.audioEnabled,reducedMotion:d.settings.reducedMotion}};
+ return {version:2,spins,usedCodes:[...d.usedCodes],settings:{audioEnabled:d.settings.audioEnabled,reducedMotion:d.settings.reducedMotion}};
 }
 export function mergeBackup(current: AppState, incoming: AppState): AppState {
  const spins = current.spins.map(s => ({...s}));
