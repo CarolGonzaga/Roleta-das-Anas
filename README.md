@@ -31,11 +31,11 @@ npm run preview
 
 ## Surpresa e prêmios sem repetição
 
-Os nove mimos originais permanecem no código, sem aparecer na interface antes da revelação. Cada prêmio pode ser conquistado **uma única vez no histórico local**, independentemente de estar aguardando ou recebido.
+Os nove mimos originais e o Vale Sorvete (dez recompensas) permanecem no código, sem aparecer na interface antes da revelação. Cada prêmio pode ser conquistado **uma única vez no histórico local**, independentemente de estar aguardando ou recebido.
 
 O sorteio da carta é independente do prêmio: cada carta tem 25% de chance e pode revelar qualquer mimo ainda elegível. As cartas podem reaparecer; os prêmios não. Os prêmios disponíveis têm inicialmente pesos iguais. A estrutura preserva ativação, pesos e limites no código-fonte.
 
-Após conquistar os nove mimos, o oráculo bloqueia novas rodadas e informa que a coleção foi completada. Nenhum novo código é consumido, não há reinício automático e não existe botão para apagar histórico ou liberar repetições.
+Após conquistar os dez mimos, o oráculo bloqueia novas rodadas e informa que a coleção foi completada. Nenhum novo código é consumido, não há reinício automático e não existe botão para apagar histórico ou liberar repetições.
 
 Históricos anteriores e backups com repetições já existentes são preservados. Qualquer prêmio presente no histórico fica excluído de todos os próximos sorteios. Não são inventadas cartas para as conquistas antigas.
 

@@ -14,7 +14,7 @@ describe('códigos e resgates',()=>{
  it('recupera o mesmo prêmio após fechar durante animação',()=>{const state=createSpin(initialState(),'ANA5421',()=>.3);const restored=parseBackup(JSON.stringify(state));expect(restored.spins[0]).toEqual(state.spins[0]);expect(restored.spins[0].animationCompleted).toBe(false);expect(()=>createSpin(restored,'ANA5421')).toThrow();});
 });
 describe('sorteio e roleta',()=>{
- it('seleciona igualmente os nove prêmios pelos intervalos',()=>{for(let i=0;i<9;i++)expect(selectReward(rewards,()=>(i+.5)/9).id).toBe(i+1);});
+ it('seleciona igualmente todos os prêmios pelos intervalos',()=>{for(let i=0;i<rewards.length;i++)expect(selectReward(rewards,()=>(i+.5)/rewards.length).id).toBe(rewards[i].id);});
  it('respeita pesos configurados',()=>{const pool=[{...rewards[0],weight:3},{...rewards[1],weight:1}];expect(selectReward(pool,()=>.74).id).toBe(1);expect(selectReward(pool,()=>.75).id).toBe(2);expect(selectReward(pool,()=>.999999).id).toBe(2);});
  it('exclui prêmios inativos, de peso zero e esgotados',()=>{const state=createSpin(initialState(),'ANA5421',()=>0);const pool=[{...rewards[0],maxAwards:1},{...rewards[1],enabled:false},{...rewards[2],weight:0},rewards[3]];expect(eligibleRewards(state,pool).map(r=>r.id)).toEqual([4]);});
  it('recusa pool vazio',()=>{expect(()=>selectReward([])).toThrow();});
@@ -42,30 +42,30 @@ describe('oráculo e coleção sem repetição',()=>{
   const values=[.01,.95,.6];
   const state=createSpin(initialState(),'ANA5421',()=>values.shift()!);
   expect(state.spins[0].cardSnapshot?.id).toBe('sun');
-  expect(state.spins[0].rewardSnapshot.id).toBe(9);
+  expect(state.spins[0].rewardSnapshot.id).toBe(rewards.at(-1)!.id);
   expect(state.spins[0].message).toBe(cardMessages.sun[3]);
   expect(values).toHaveLength(0);
  });
- it('cada uma das quatro cartas pode revelar qualquer um dos nove prêmios',()=>{
-  for(let c=0;c<4;c++)for(let r=0;r<9;r++){
-   const values=[(c+.5)/4,(r+.5)/9,0];
+ it('cada uma das quatro cartas pode revelar qualquer prêmio disponível',()=>{
+  for(let c=0;c<4;c++)for(let r=0;r<rewards.length;r++){
+   const values=[(c+.5)/4,(r+.5)/rewards.length,0];
    const spin=createSpin(initialState(),'ANA5421',()=>values.shift()!).spins[0];
    expect(spin.cardSnapshot?.id).toBe(tarotCards[c].id);
    expect(spin.rewardSnapshot.id).toBe(r+1);
    expect(cardMessages[tarotCards[c].id]).toContain(spin.message);
   }
  });
- it('todos os nove mimos saem uma única vez e o décimo código não é consumido',()=>{
+ it('todos os mimos saem uma única vez e o código seguinte não é consumido',()=>{
   let state=initialState();
-  for(let i=0;i<9;i++){
+  for(let i=0;i<rewards.length;i++){
    state=createSpin(state,redemptionCodes[i],()=>0);
    state.spins.at(-1)!.animationCompleted=true;
   }
-  expect(new Set(state.spins.map(s=>s.rewardSnapshot.id)).size).toBe(9);
+  expect(new Set(state.spins.map(s=>s.rewardSnapshot.id)).size).toBe(rewards.length);
   expect(eligibleRewards(state)).toEqual([]);
-  expect(()=>createSpin(state,redemptionCodes[9],()=>0)).toThrow(EXHAUSTED_MESSAGE);
-  expect(state.usedCodes).not.toContain(redemptionCodes[9]);
-  expect(state.spins).toHaveLength(9);
+  expect(()=>createSpin(state,redemptionCodes[rewards.length],()=>0)).toThrow(EXHAUSTED_MESSAGE);
+  expect(state.usedCodes).not.toContain(redemptionCodes[rewards.length]);
+  expect(state.spins).toHaveLength(rewards.length);
  });
  it('receber um mimo não o recoloca no sorteio',()=>{
   const state=createSpin(initialState(),'ANA5421',()=>0);

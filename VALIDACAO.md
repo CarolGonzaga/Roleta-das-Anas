@@ -2,6 +2,16 @@
 
 Atualização de 9 de outubro de 2026.
 
+## Nova recompensa: Vale Sorvete
+
+- Adicionado com ID 10, sem modificar IDs existentes, códigos, chave de armazenamento ou versão do esquema.
+- **36 testes Vitest**, lint e build aprovados após esta inclusão.
+- Regressão automatizada confirma dois resgates preservados integralmente, incluindo status recebido, mensagens, datas, códigos e preferências; Vale Sorvete fica elegível e não pode repetir após ser conquistado.
+- Coleções com os nove prêmios anteriores completos passam a ter somente Vale Sorvete disponível, sem reiniciar o histórico.
+- Teste real em Edge/Chromium carregou um backup anterior com dois resgates, conquistou Vale Sorvete como terceiro prêmio e confirmou os dois registros intactos após recarregar.
+
+As verificações abaixo foram realizadas na versão anterior do Oráculo, com nove prêmios.
+
 ## Verificações automatizadas
 
 - TypeScript e build Vite aprovados.

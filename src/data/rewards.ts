@@ -9,4 +9,5 @@ export const rewards: Reward[] = [
  {id:7,name:'Sua mulher deverá limpar um cocô',shortName:'Vale-limpeza',description:'Parabéns, gatinha! Você acaba de ganhar um vale-limpeza de cocô. Essa missão desagradável agora é toda da Carol.',icon:'HandHeart',category:'Cuidado'},
  {id:8,name:'Copo de açaí',shortName:'Açaí',description:'Um açaí gostoso para a mulher mais linda desse universo.',icon:'CupSoda',category:'Gostosuras'},
  {id:9,name:'1 hora sem tarefas',shortName:'1 hora de paz',description:'Uma hora inteirinha para fazer absolutamente o que você quiser. Você merece esse tempinho.',icon:'Clock',category:'Descanso'},
+ {id:10,name:'Vale Sorvete',shortName:'Vale Sorvete',description:'Um sorvetinho para refrescar o dia da minha gatinha. Escolha seu sabor favorito e deixe o mimo por conta da sua mulher!',icon:'IceCreamBowl',category:'Gostosuras'},
 ].map(r => ({...r,weight:1,enabled:true,maxAwards:null}));
