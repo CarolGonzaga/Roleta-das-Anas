@@ -1,0 +1,25 @@
+export const whispers = [
+ 'Você não precisa fazer tudo hoje. Uma conquista de cada vez, meu amor.',
+ 'Até os feitiços mais poderosos começam com pequenos movimentos.',
+ 'Estou orgulhosa de você, gatinha.',
+ 'Você merece carinho até nos dias em que não consegue fazer nada.',
+ 'Descansar também faz parte da magia.',
+ 'Não existe tarefa pequena quando ela exige esforço de você.',
+];
+export const messages = [
+ 'Boa, gatinha! Eu te amo!', 'Sabia que você daria conta, meu amor!',
+ 'Obrigada por se esforçar por nós!', 'Minha menina é incrível, sabia?',
+ 'Você conseguiu! Estou tão orgulhosa de você!', 'Essa é a minha bruxinha poderosa!',
+ 'Eu sabia que você tinha essa magia toda!', 'Você merece todos os mimos do mundo.',
+ 'Parabéns, meu benzinho! Mais uma conquista.', 'Sua mulher está muito orgulhosa de você.',
+ 'Minha gatinha merece ser mimada, sim!', 'Obrigada por não desistir, meu amor.',
+ 'Você é muito mais capaz do que imagina.', 'Eu vejo seu esforço, mesmo quando você acha que ninguém percebe.',
+ 'Te amo mais do que todas as estrelas desse céu.', 'Você é meu feitiço favorito.',
+ 'Até as pequenas vitórias merecem comemoração.', 'A melhor parte do meu dia é poder cuidar de você.',
+ 'Você foi maravilhosa! Vem buscar seu prêmio.', 'Sua mulher te ama muito, viu?',
+ 'Não importa o tamanho da tarefa. Seu esforço é importante.', 'Pode se orgulhar de você, porque eu já estou.',
+ 'Uma missão concluída e um montão de carinho conquistado.', 'Amo construir nossa vidinha com você.',
+ 'Minha gatinha merece descansar e ser cuidada.', 'Você fez sua parte e agora eu quero fazer a minha: te mimar.',
+ 'Não existe universo em que eu não escolheria você.', 'Boa, meu amor! Mais uma missão vencida!',
+ 'Obrigada por dividir a vida comigo.', 'Nunca esquece: eu te amo independentemente de qualquer tarefa.',
+];
