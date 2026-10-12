@@ -31,11 +31,13 @@ npm run preview
 
 ## Surpresa e prêmios sem repetição
 
-Os nove mimos originais e o Vale Sorvete (dez recompensas) permanecem no código, sem aparecer na interface antes da revelação. Cada prêmio pode ser conquistado **uma única vez no histórico local**, independentemente de estar aguardando ou recebido.
+As dezoito recompensas da coleção, incluindo os nove mimos originais e o Vale Sorvete, permanecem no código, sem aparecer na interface antes da revelação. Cada prêmio pode ser conquistado **uma única vez no histórico local**, independentemente de estar aguardando ou recebido.
+
+Em 12 de outubro de 2026 foram adicionados oito mimos com IDs novos (11–18): saída para um lugar à sua escolha, café, iFood, favor de livre escolha, limpeza de xixi de cachorrinho, três dias sem ir ao mercado, cinco dias sem ir ao mercado e pizza. IDs e snapshots anteriores continuam intactos. Coleções antes completas voltam a oferecer somente os novos prêmios disponíveis, sem reiniciar resgates nem liberar códigos usados.
 
 O sorteio da carta é independente do prêmio: cada carta tem 25% de chance e pode revelar qualquer mimo ainda elegível. As cartas podem reaparecer; os prêmios não. Os prêmios disponíveis têm inicialmente pesos iguais. A estrutura preserva ativação, pesos e limites no código-fonte.
 
-Após conquistar os dez mimos, o oráculo bloqueia novas rodadas e informa que a coleção foi completada. Nenhum novo código é consumido, não há reinício automático e não existe botão para apagar histórico ou liberar repetições.
+Após conquistar todos os mimos disponíveis, o oráculo bloqueia novas rodadas e informa que a coleção foi completada. Nenhum novo código é consumido, não há reinício automático e não existe botão para apagar histórico ou liberar repetições.
 
 Históricos anteriores e backups com repetições já existentes são preservados. Qualquer prêmio presente no histórico fica excluído de todos os próximos sorteios. Não são inventadas cartas para as conquistas antigas.
 

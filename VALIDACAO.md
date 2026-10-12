@@ -1,5 +1,13 @@
 # Validação — O Oráculo dos Encantos
 
+## Expansão de 12 de outubro de 2026
+
+- Oito novas recompensas com IDs 11–18; os dez IDs e ícones anteriores foram preservados.
+- **40 testes Vitest aprovados**, além de lint e build de produção.
+- Regressões confirmam leitura de históricos v1/v2, códigos usados bloqueados, preservação de mensagens, datas, status e preferências, e elegibilidade das oito novas recompensas após completar as dez antigas.
+- As oito novas recompensas são sorteadas uma única vez cada; a restauração e a mescla preservam todos os resgates anteriores.
+- Chave de armazenamento, versão do esquema e códigos de resgate permanecem inalterados. Não é necessário apagar ou reiniciar dados no navegador.
+
 Atualização de 9 de outubro de 2026.
 
 ## Nova recompensa: Vale Sorvete

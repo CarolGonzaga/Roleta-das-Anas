@@ -10,4 +10,12 @@ export const rewards: Reward[] = [
  {id:8,name:'Copo de açaí',shortName:'Açaí',description:'Um açaí gostoso para a mulher mais linda desse universo.',icon:'CupSoda',category:'Gostosuras'},
  {id:9,name:'1 hora sem tarefas',shortName:'1 hora de paz',description:'Uma hora inteirinha para fazer absolutamente o que você quiser. Você merece esse tempinho.',icon:'Clock',category:'Descanso'},
  {id:10,name:'Vale Sorvete',shortName:'Vale Sorvete',description:'Um sorvetinho para refrescar o dia da minha gatinha. Escolha seu sabor favorito e deixe o mimo por conta da sua mulher!',icon:'IceCreamBowl',category:'Gostosuras'},
+ {id:11,name:'Vale saída para qualquer lugar à sua escolha',shortName:'Vale saída',description:'Minha gatinha escolhe o destino! Você ganhou uma saída para qualquer lugar à sua escolha, com todo o carinho da sua mulher.',icon:'MapPin',category:'Passeios'},
+ {id:12,name:'Vale café',shortName:'Vale café',description:'Um cafezinho do jeitinho que minha gatinha gosta. Sua mulher cuida desse mimo para você!',icon:'Coffee',category:'Gostosuras'},
+ {id:13,name:'Vale iFood',shortName:'Vale iFood',description:'Escolha o que está com vontade de pedir no iFood, meu amor. Esse pedido é um carinho da sua mulher para você!',icon:'UtensilsCrossed',category:'Gostosuras'},
+ {id:14,name:'Sua mulher te deve um favor (livre escolha)',shortName:'Vale favor',description:'Você ganhou um favor da sua mulher, com livre escolha. Me conta como posso cuidar de você hoje, gatinha!',icon:'HeartHandshake',category:'Carinho'},
+ {id:15,name:'Vale limpeza de xixi de cachorrinho',shortName:'Vale limpeza de xixi',description:'O xixi do cachorrinho fica por conta da Carol desta vez. Minha gatinha pode deixar essa missão para sua mulher!',icon:'HandHeart',category:'Cuidado'},
+ {id:16,name:'Vale não ir ao mercado por 3 dias',shortName:'3 dias sem mercado',description:'Por três dias, minha gatinha não precisa ir ao mercado. Sua mulher cuida dessa tarefa com carinho!',icon:'ShoppingBasket',category:'Descanso'},
+ {id:17,name:'Vale não ir ao mercado por 5 dias',shortName:'5 dias sem mercado',description:'Cinco dias sem precisar ir ao mercado, meu amor. Deixe essa tarefa com sua mulher e aproveite seu descanso!',icon:'ShoppingCart',category:'Descanso'},
+ {id:18,name:'Vale pizza',shortName:'Vale pizza',description:'Uma pizza gostosa para minha gatinha! Escolha seu sabor favorito e deixe esse mimo por conta da sua mulher.',icon:'Pizza',category:'Gostosuras'},
 ].map(r => ({...r,weight:1,enabled:true,maxAwards:null}));

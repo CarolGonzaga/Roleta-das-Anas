@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createSpin, eligibleRewards, initialState, mergeBackup, parseBackup, readState, validateCode } from '../services/game';
 import { redemptionCodes } from '../data/redemptionCodes';
+import { rewards } from '../data/rewards';
 
 describe('adicionar Vale Sorvete a uma instalação existente',()=>{
  it('mantém os dois resgates anteriores e disponibiliza a recompensa nova',()=>{
@@ -18,10 +19,11 @@ describe('adicionar Vale Sorvete a uma instalação existente',()=>{
   expect(eligibleRewards(restored).map(r=>r.id)).toContain(10);
   expect(eligibleRewards(restored).map(r=>r.id)).not.toContain(1);
   expect(eligibleRewards(restored).map(r=>r.id)).not.toContain(2);
-  expect(eligibleRewards(restored)).toHaveLength(8);
+  expect(eligibleRewards(restored)).toHaveLength(rewards.length-2);
   expect(()=>validateCode(redemptionCodes[0],restored)).toThrow(/já foi usado/);
 
-  const values=[0,.999,0];
+  const available=eligibleRewards(restored);
+  const values=[0,(available.findIndex(r=>r.id===10)+.5)/available.length,0];
   const next=createSpin(restored,redemptionCodes[2],()=>values.shift()!);
   expect(next.spins.slice(0,2)).toEqual(previous.spins);
   expect(next.usedCodes.slice(0,2)).toEqual(previous.usedCodes);
@@ -41,10 +43,10 @@ describe('adicionar Vale Sorvete a uma instalação existente',()=>{
    previous.spins.at(-1)!.animationCompleted=true;
   }
   const restored=parseBackup(JSON.stringify(previous));
-  expect(eligibleRewards(restored).map(r=>r.id)).toEqual([10]);
+  expect(eligibleRewards(restored).map(r=>r.id)).toEqual(rewards.filter(r=>r.id>=10).map(r=>r.id));
   const next=createSpin(restored,redemptionCodes[9],()=>0);
   expect(next.spins.slice(0,9)).toEqual(previous.spins);
   expect(next.spins.at(-1)!.rewardSnapshot.name).toBe('Vale Sorvete');
-  expect(eligibleRewards(next)).toEqual([]);
+  expect(eligibleRewards(next).map(r=>r.id)).toEqual(rewards.filter(r=>r.id>10).map(r=>r.id));
  });
 });
